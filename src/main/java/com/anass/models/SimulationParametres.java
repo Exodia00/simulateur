@@ -7,12 +7,20 @@ public class SimulationParametres {
     private int niveauReservoir, duree, nbCours;
     private ArrayList<Integer> debitsConduite, debitsCours;
 
-    public void SimulationParameters(){
+    public SimulationParametres(){
         this.niveauReservoir = 0;
         this.duree = 0;
         this.nbCours = 0;
         this.debitsConduite = new ArrayList<>();
         this.debitsCours = new ArrayList<>();
+    }
+
+    public SimulationParametres(SimulationParametres param){
+        this.niveauReservoir = param.getNiveauReservoir();
+        this.duree = param.getDuree();
+        this.nbCours = param.getNbCours();
+        this.debitsConduite = param.getDebitsConduite();
+        this.debitsCours = param.getDebitsCours();
     }
 
     // Getters / Setters
