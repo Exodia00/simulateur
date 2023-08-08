@@ -1,5 +1,6 @@
 package com.anass.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,14 +11,18 @@ import com.anass.models.SimulationParametres;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class SetupController implements Initializable{
 
@@ -29,6 +34,9 @@ public class SetupController implements Initializable{
     @FXML private TextField nbCoursFld;
     @FXML private TextField niveauReservoirFld;
     @FXML private Label alert;
+    
+    private Stage stage;
+    private String FXML_PATH = "/com/anass/fxml/setup.fxml";
 
     // Data fields
     ObservableList<TextField> conduiteFlds = FXCollections.observableArrayList();
@@ -42,19 +50,14 @@ public class SetupController implements Initializable{
             this.conduiteBox.getChildren().add(conduiteIBox);   // Add the element to the view
             this.conduiteFlds.add((TextField)conduiteIBox.getChildren().get(1));  
         }
-
     } 
 
 
     @FXML public void lancerSimulation(){
 
         try{
-            SimulationParametres dataInit = this.getSimulationParametres();
-            System.out.println(dataInit.toString());
+            lancerSimulationStage(this.getSimulationParametres());
         }catch (IllegalArgumentException e){ return;}
-
-
-    
     }
 
     @FXML public void handleNbCoursChanged(){
@@ -68,6 +71,26 @@ public class SetupController implements Initializable{
         }
     }
 
+    public void start() throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setController(this);
+        Parent root = (Parent) loader.load(getClass().getResourceAsStream(this.FXML_PATH));
+        this.stage = new Stage();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Nouvelle Simulation");
+        stage.show();
+    }
+
+    private void lancerSimulationStage(SimulationParametres params){
+        SimulationController simulationController = new SimulationController(params);
+        try {
+            simulationController.start();
+            stage.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void updateDebitBox(int nbCours){
         int nbCoursActu = debitHboxes.size();
