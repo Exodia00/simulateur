@@ -2,7 +2,10 @@ package com.anass.controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
+
+import com.anass.models.SimulationParametres;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +23,7 @@ public class SetupController implements Initializable{
 
     // FXML fields 
     @FXML private FlowPane conduiteBox;
-    @FXML private VBox debitBox;
+    @FXML private FlowPane debitBox;
     @FXML private TextField dureeFld;
     @FXML private Button lancerBtn;
     @FXML private TextField nbCoursFld;
@@ -29,6 +32,7 @@ public class SetupController implements Initializable{
 
     // Data fields
     ObservableList<TextField> conduiteFlds = FXCollections.observableArrayList();
+    ObservableList<HBox> debitHboxes = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -41,14 +45,50 @@ public class SetupController implements Initializable{
 
     } 
 
-    @FXML public void lancerSimulation(){
-        // Get user input
-        try{
-            ArrayList<Integer> debitsConduite = getDebitsConduite();
-        }catch(NumberFormatException e){
-            alerter("Veuillez corriger les format numériques");
-        }
 
+    @FXML public void lancerSimulation(){
+
+        try{
+            SimulationParametres dataInit = this.getSimulationParametres();
+            System.out.println(dataInit.toString());
+        }catch (IllegalArgumentException e){ return;}
+
+
+    
+    }
+
+    @FXML public void handleNbCoursChanged(){
+        // Dynamically create debit input boxes
+        try{
+            int nbCours = Integer.parseInt(nbCoursFld.getText());
+            alerter("");    // Reset any potential error message
+            updateDebitBox(nbCours);
+        }catch (NumberFormatException e){
+            alerter("Le nombre de cours n'est pas valide");
+        }
+    }
+
+
+    private void updateDebitBox(int nbCours){
+        int nbCoursActu = debitHboxes.size();
+        int diff = nbCoursActu - nbCours;
+
+        if( diff==0 ) return;
+
+        if( diff < 0 ){
+            for( int i=0; i<-diff; i++){
+                System.out.println("Creating box : " + i);
+                HBox box = creerDebitIBox();
+                debitBox.getChildren().add(box);
+                debitHboxes.add(box);
+            }
+        }else if(diff>0){
+            for( int j=0; j<diff; j++){
+                HBox box = debitHboxes.remove(nbCours);
+                debitBox.getChildren().remove(nbCours);
+                System.out.println("Removed " + ((Label) box.getChildren().get(0)).getText());
+            }
+        }
     }
 
     private HBox creerConduiteIBox(int i){
@@ -58,6 +98,24 @@ public class SetupController implements Initializable{
 
         Label label = new Label(String.format("%02d", i) + ":00H");
         TextField txtFld = new TextField();
+        txtFld.setPrefWidth(100);
+
+
+
+        box.getChildren().addAll(label, txtFld);        
+
+        return box;
+    }
+
+    private HBox creerDebitIBox(){
+        HBox box = new HBox();
+        box.setSpacing(10);
+        box.setAlignment(Pos.CENTER);
+        int position = this.debitHboxes.size() + 1;
+
+        Label label = new Label("Debit N" + String.format("%02d", position) + " : ");
+        TextField txtFld = new TextField();
+        txtFld.setPrefWidth(100);
 
         box.getChildren().addAll(label, txtFld);        
 
@@ -69,6 +127,7 @@ public class SetupController implements Initializable{
         this.alert.setText(message);
     }
 
+
     private ArrayList<Integer> getDebitsConduite() throws NumberFormatException{
         ArrayList<Integer> debitsConduite = new ArrayList<Integer>();
         for (TextField tf : conduiteFlds){
@@ -77,4 +136,46 @@ public class SetupController implements Initializable{
         return debitsConduite;
     }
 
+    private ArrayList<Integer> getDebitsCours(){
+        ArrayList<Integer> debitsCours = new ArrayList<Integer>();
+        for (HBox box : this.debitHboxes){
+            debitsCours.add(Integer.parseInt(((TextField) box.getChildren().get(1)).getText()));
+        }
+        return debitsCours;
+    }
+
+    private SimulationParametres getSimulationParametres() throws IllegalArgumentException{
+        SimulationParametres parametres = new SimulationParametres();
+        // nb Cours :
+        parametres.setNbCours(Integer.parseInt(this.nbCoursFld.getText()));
+        // debits conduite
+        try{
+            parametres.setDebitsConduite(getDebitsConduite());
+        }catch(NumberFormatException e){
+            alerter("Valeurs des debits de la conduites pendant la journée ne sont pas valides.");
+            throw new IllegalArgumentException();
+        }
+        // Debit cours :
+        try{
+            parametres.setDebitsCours(getDebitsCours());
+        }catch(NumberFormatException e){
+            alerter("Valeurs des debits des cours ne sont pas valides.");
+            throw new IllegalArgumentException();
+        }
+        // Niveau du reservoir
+        try{
+            parametres.setNiveauReservoir(Integer.parseInt(this.niveauReservoirFld.getText()));
+        }catch(NumberFormatException e){
+            alerter("Valeur du niveau du reservoir n'est pas valide");
+            throw new IllegalArgumentException();
+        }
+        // Duree de la simulation :
+        try{
+            parametres.setDuree(Integer.parseInt(this.dureeFld.getText()));
+        }catch(NumberFormatException e){
+            alerter("Valeur de la duree de la simulation n'est pas valide");
+            throw new IllegalArgumentException();
+        }
+        return parametres;
+    }
 }
