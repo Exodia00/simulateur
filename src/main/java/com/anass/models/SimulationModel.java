@@ -31,4 +31,15 @@ public class SimulationModel {
     }
 
 
+    public EnsembleCoursModel getEnsembleCoursModel() {
+        return ensembleCoursModel;
+    }
+
+    public EtatSimulation getEtatSimulation() {
+        return etatSimulation;
+    }
+
+
+
+
 }
