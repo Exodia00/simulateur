@@ -33,7 +33,6 @@ public class SimulationController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(simulation.toString());
         try {
             initDashboard();
         } catch (IOException e) {
@@ -54,7 +53,7 @@ public class SimulationController implements Initializable{
 
     // Methods privees 
     private void initDashboard() throws IOException{
-        DashboardController dashboardController = new DashboardController(simulation.getModel());
+        DashboardController dashboardController = new DashboardController(simulation);
         borderPane.setRight(dashboardController.getView());
     }
 

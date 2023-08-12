@@ -39,6 +39,10 @@ public class SimulationModel {
         return etatSimulation;
     }
 
+    public void setEtatSimulation(EtatSimulation etat){
+        this.etatSimulation = etat;
+    }
+
 
 
 

@@ -21,6 +21,10 @@ public class EtatSimulation {
         this.etat = etat;
     }
 
+    public Etat getEtat(){
+        return this.etat;
+    }
+
 
     public String toString(){
         StringBuilder builder = new StringBuilder("------ Etat de la simulation : ");

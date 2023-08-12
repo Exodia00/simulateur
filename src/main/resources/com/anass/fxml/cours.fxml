@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox alignment="BASELINE_CENTER" prefHeight="25.0" prefWidth="198.0" spacing="10.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="label" layoutX="136.0" layoutY="19.0" prefHeight="17.0" prefWidth="111.0" text="Cours N 01 :" />
+      <TextField fx:id="debitFld" prefHeight="25.0" prefWidth="51.0" text="25" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="3.0" right="3.0" top="5.0" />
+   </padding>
+</HBox>

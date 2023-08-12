@@ -14,19 +14,27 @@ public class EnsembleCoursModel {
 
     public EnsembleCoursModel(List<Integer> debits){
         coursList = new ArrayList<>();
-        for (int debit : debits){
-            this.coursList.add(new CoursModel(debit));
+        for (int i=0; i<debits.size(); i++){
+            this.coursList.add(new CoursModel(i, debits.get(i)));
             nbCours++;
         }
     }
 
     // Public Methods
+    public CoursModel getCours(int index){
+        return this.coursList.get(index);
+    }
+
     public int getDebit(int index){
         return coursList.get(index).getDebit();
     }
 
     public void setDebit(int index, int debit){
         coursList.get(index).setDebit(debit);
+    }
+
+    public int getNbCours(){
+        return this.nbCours;
     }
 
     @Override
