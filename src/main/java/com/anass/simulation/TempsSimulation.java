@@ -20,6 +20,7 @@ public class TempsSimulation extends ScheduledService<Void>{
             @Override
             protected Void call() throws Exception {
                 if (etat.getEtat() == Etat.PAUSE) return null;
+                if (etat.getEtat() == Etat.FIN) cancel();
                 Simulation.addTemps(0, 15);
                 return null;
             }

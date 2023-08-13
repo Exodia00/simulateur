@@ -28,6 +28,7 @@ public class CoursSimulation extends ScheduledService<Void>{
             @Override
             protected Void call() throws Exception {
                 if (etat.getEtat() == Etat.PAUSE) return null;
+                if (etat.getEtat() == Etat.FIN) cancel();
                 int volume = BarrageOperations.calculerVolume(cours);
                 observer.updateVolume(volume);
                 return null;    

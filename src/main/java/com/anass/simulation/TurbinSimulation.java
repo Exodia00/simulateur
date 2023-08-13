@@ -27,6 +27,7 @@ public class TurbinSimulation extends ScheduledService<Void>{
             @Override
             protected Void call() throws Exception {
                 if (etat.getEtat() == Etat.PAUSE) return null;
+                if (etat.getEtat() == Etat.FIN) cancel();
                 int volume = -1 * BarrageOperations.calculerVolume(turbin);
                 observer.updateVolume(volume);
                 return null;
