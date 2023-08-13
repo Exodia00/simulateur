@@ -37,6 +37,14 @@ public class EnsembleCoursModel {
         return this.nbCours;
     }
 
+    public int getDebitTotal(){
+        int sum = 0;
+        for (CoursModel cours : this.coursList){
+            sum += cours.getDebit();
+        }
+        return sum;
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("-------- Ensemble de Cours : \n");

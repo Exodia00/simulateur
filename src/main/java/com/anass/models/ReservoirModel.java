@@ -15,6 +15,10 @@ public class ReservoirModel {
         this.volume = volume;
     }
 
+    public void addVolume(int volume){
+        this.volume += volume;
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("-------- Reservoir :");

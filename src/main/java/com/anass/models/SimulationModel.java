@@ -1,5 +1,10 @@
 package com.anass.models;
 
+import java.util.List;
+
+import com.anass.barrage.BarrageOperations;
+import com.anass.models.EtatSimulation.Etat;
+
 public class SimulationModel {
     
     private EnsembleCoursModel ensembleCoursModel;
@@ -39,8 +44,30 @@ public class SimulationModel {
         return etatSimulation;
     }
 
+    public TurbinModel getTurbinModel(){
+        return this.turbinModel;
+    }
+
     public void setEtatSimulation(EtatSimulation etat){
-        this.etatSimulation = etat;
+        this.etatSimulation.setEtat(etat.getEtat());
+    }
+
+    public ReservoirModel getReservoirModel(){
+        return this.reservoirModel;
+    }
+
+    public Etat getEtatTurbo(int heure){
+        return BarrageOperations.calcEtatTurbo(reservoirModel, ensembleCoursModel, turbinModel.getDebit(heure));
+    }
+
+    public String getEtatTurboStr(int heure){
+        Etat etat = getEtatTurbo(heure);
+
+        if (etat==Etat.ACTIVE){ return "A marche";}
+        if (etat==Etat.PAUSE){  return "Arret";}
+        if (etat==Etat.FIN){    return "Fin";}
+
+        return "";
     }
 
 

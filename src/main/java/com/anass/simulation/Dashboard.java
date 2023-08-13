@@ -16,6 +16,7 @@ public class Dashboard {
         SimulationModel model = simulation.getModel();
         this.ensembleCoursModel = model.getEnsembleCoursModel();
         this.etatSimulation = model.getEtatSimulation();
+        setDashboardObserver(simulation);
     }
 
     public void setDashboardObserver(DashboardObserver observer){
@@ -36,6 +37,7 @@ public class Dashboard {
 
     public void updateEtatSimulation(EtatSimulation etat){
         this.etatSimulation = etat;
+        dashboardObserver.updateEtatsimulation(etat);
     }
 
 

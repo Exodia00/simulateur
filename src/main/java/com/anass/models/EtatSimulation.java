@@ -25,9 +25,13 @@ public class EtatSimulation {
         return this.etat;
     }
 
+    public void setEtat(Etat etat){
+        this.etat = etat;
+    }
+
 
     public String toString(){
-        StringBuilder builder = new StringBuilder("------ Etat de la simulation : ");
+        StringBuilder builder = new StringBuilder();
         String str = "";
         if (etat == Etat.ACTIVE) str = "Actve !";
         else if(etat == Etat.PAUSE) str = "En Pause !";

@@ -35,6 +35,7 @@ public class SimulationController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         try {
             initDashboard();
+            initMetriques();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,6 +56,11 @@ public class SimulationController implements Initializable{
     private void initDashboard() throws IOException{
         DashboardController dashboardController = new DashboardController(simulation);
         borderPane.setRight(dashboardController.getView());
+    }
+
+    private void initMetriques() throws IOException{
+        MetriquesController metriquesController = new MetriquesController(simulation);
+        borderPane.setLeft(metriquesController.getView());
     }
 
 
