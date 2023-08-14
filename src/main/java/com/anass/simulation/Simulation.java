@@ -33,8 +33,8 @@ public class Simulation implements DashboardObserver, VolumeObserver{
         startServices();
     }
 
-    public void endSimulation() throws Exception{
-        throw new Exception("Unimplemented");
+    public void endSimulation(){
+        model.setEtatSimulation(new EtatSimulation(Etat.FIN));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Simulation implements DashboardObserver, VolumeObserver{
         }));
         tempsSimulation.start();
     }
-
+    
     private void updateUI(){
         for(SimulationUiObserver observer : simulationUiObservers){
             observer.updateUi(tempsSimulation.getTemps());

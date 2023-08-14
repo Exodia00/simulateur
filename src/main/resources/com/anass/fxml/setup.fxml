@@ -51,9 +51,9 @@
                               <TextField fx:id="niveauReservoirFld" />
                            </children>
                         </VBox>
-                        <VBox prefHeight="67.0" prefWidth="164.0">
+                        <VBox prefHeight="64.0" prefWidth="179.0">
                            <children>
-                              <Label text="Durée de la simulation (Jours)" />
+                              <Label prefHeight="17.0" prefWidth="191.0" text="Durée de la simulation (heures)" />
                               <TextField fx:id="dureeFld" />
                            </children>
                         </VBox>
