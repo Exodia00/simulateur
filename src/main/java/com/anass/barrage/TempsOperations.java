@@ -14,4 +14,12 @@ public class TempsOperations {
         return result;
     }
 
+    public static Integer[] addCumul(Integer[] tempsCumul, int h, int m){
+        Integer[] result = tempsCumul;
+        int sumMin = m + tempsCumul[1];
+        result[1] = sumMin%60;
+        result[0] = result[0] + (int)(sumMin/60);
+        return result;
+    }
+
 }

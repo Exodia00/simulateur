@@ -17,8 +17,6 @@ import javafx.util.Duration;
 
 public class Simulation implements DashboardObserver, VolumeObserver{
 
-    private static Integer[] temps = new Integer[]{ 0, 0 };
-
     private SimulationModel model;
     private List<CoursSimulation> coursSimulations;
     private TurbinSimulation turbinSimultaion;
@@ -35,6 +33,10 @@ public class Simulation implements DashboardObserver, VolumeObserver{
         startServices();
     }
 
+    public void endSimulation() throws Exception{
+        throw new Exception("Unimplemented");
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("-- Simulation :  -------/");
@@ -47,17 +49,6 @@ public class Simulation implements DashboardObserver, VolumeObserver{
         return model;
     }
 
-    public static int getHeure(){
-        return temps[0];
-    }
-
-    public static Integer[] getTemps(){
-        return temps;
-    }
-
-    public static void addTemps(int h, int m){
-        Simulation.temps = TempsOperations.add(temps, h, m);
-    }
 
     public void addSimulationUiObserver(SimulationUiObserver observer){
         simulationUiObservers.add(observer);
@@ -97,7 +88,7 @@ public class Simulation implements DashboardObserver, VolumeObserver{
             coursSimulation.setVolumeObserver(this);
             coursSimulations.add(coursSimulation);
         }
-        this.tempsSimulation = new TempsSimulation(model.getEtatSimulation());
+        this.tempsSimulation = new TempsSimulation(model.getEtatSimulation(), model.getDuree());
     }
 
     private void startServices(){
@@ -110,13 +101,21 @@ public class Simulation implements DashboardObserver, VolumeObserver{
         tempsSimulation.setPeriod(Duration.millis(250));
         tempsSimulation.setOnSucceeded((event->{
             updateUI();
+            turbinSimultaion.setHeure(tempsSimulation.getTemps()[0]);
+            if (tempsSimulation.estTerminee()){
+                try {
+                    endSimulation();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }));
         tempsSimulation.start();
     }
 
     private void updateUI(){
         for(SimulationUiObserver observer : simulationUiObservers){
-            observer.updateUi();
+            observer.updateUi(tempsSimulation.getTemps());
         }
     }
 

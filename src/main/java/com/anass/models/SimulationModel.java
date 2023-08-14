@@ -12,6 +12,7 @@ public class SimulationModel {
     private TurbinModel turbinModel;
     private SimulationRslt simulationRslt;
     private EtatSimulation etatSimulation;
+    private int duree;
 
 
     public SimulationModel(SimulationParametres param){
@@ -20,6 +21,7 @@ public class SimulationModel {
         this.turbinModel = new TurbinModel(param.getDebitsConduite());
         this.simulationRslt = new SimulationRslt();
         this.etatSimulation = new EtatSimulation(EtatSimulation.PAUSE);
+        this.duree = param.getDuree();
     } 
 
 
@@ -54,6 +56,10 @@ public class SimulationModel {
 
     public ReservoirModel getReservoirModel(){
         return this.reservoirModel;
+    }
+
+    public int getDuree(){
+        return this.duree;
     }
 
     public Etat getEtatTurbo(int heure){

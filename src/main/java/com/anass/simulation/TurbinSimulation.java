@@ -15,6 +15,7 @@ public class TurbinSimulation extends ScheduledService<Void>{
     private TurbinModel turbin;
     private EtatSimulation etat;
     private VolumeObserver observer;
+    private int heure = 0;
 
     public TurbinSimulation(TurbinModel model, EtatSimulation etat){
         this.turbin = model;
@@ -28,7 +29,7 @@ public class TurbinSimulation extends ScheduledService<Void>{
             protected Void call() throws Exception {
                 if (etat.getEtat() == Etat.PAUSE) return null;
                 if (etat.getEtat() == Etat.FIN) cancel();
-                int volume = -1 * BarrageOperations.calculerVolume(turbin);
+                int volume = -1 * BarrageOperations.calculerVolume(turbin, heure);
                 observer.updateVolume(volume);
                 return null;
             }
@@ -37,6 +38,10 @@ public class TurbinSimulation extends ScheduledService<Void>{
 
     public void setVolumeObserver(VolumeObserver observer){
         this.observer = observer;
+    }
+
+    public void setHeure(int h){
+        this.heure = h;
     }
 
 }

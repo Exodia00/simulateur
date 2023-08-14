@@ -1,5 +1,5 @@
 package com.anass.observers;
 
 public interface SimulationUiObserver {
-    public void updateUi();
+    public void updateUi(Integer[] temps);
 }

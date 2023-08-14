@@ -36,16 +36,16 @@ public class MetriquesController implements Initializable, SimulationUiObserver{
        
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        updateUi();
+        updateUi(new Integer[]{0,0});
     }
 
     @Override
-    public void updateUi() {
-        this.debitConduiteFld.setText(Integer.toString(model.getTurbinModel().getDebit(Simulation.getHeure())));
+    public void updateUi(Integer[] temps) {
+        this.debitConduiteFld.setText(Integer.toString(model.getTurbinModel().getDebit(temps[0])));
         this.debitEntrantFld.setText(Integer.toString(model.getEnsembleCoursModel().getDebitTotal()));
         this.etatFld.setText(model.getEtatSimulation().toString());
-        this.etatGroupeFld.setText(model.getEtatTurboStr(Simulation.getHeure()));
-        this.heureFld.setText(TempsOperations.toString(Simulation.getTemps()));
+        this.etatGroupeFld.setText(model.getEtatTurboStr(temps[0]));
+        this.heureFld.setText(TempsOperations.toString(temps));
         this.niveauFld.setText(Integer.toString(model.getReservoirModel().getVolume()));
     }
   

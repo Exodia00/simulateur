@@ -20,7 +20,7 @@ public class BarrageOperations {
         return cours.getDebit() * 60 * 15 ;
     }
 
-    public static int calculerVolume(TurbinModel turbin){
-        return turbin.getDebit(Simulation.getHeure()) * 60 * 60 ;
+    public static int calculerVolume(TurbinModel turbin, int h){
+        return turbin.getDebit(h) * 60 * 60 ;
     }
 }
