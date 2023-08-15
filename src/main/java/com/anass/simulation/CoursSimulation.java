@@ -3,7 +3,6 @@ package com.anass.simulation;
 import com.anass.barrage.BarrageOperations;
 import com.anass.models.CoursModel;
 import com.anass.models.EtatSimulation;
-import com.anass.models.SimulationModel;
 import com.anass.models.EtatSimulation.Etat;
 import com.anass.observers.VolumeObserver;
 

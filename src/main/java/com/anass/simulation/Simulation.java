@@ -1,9 +1,10 @@
 package com.anass.simulation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.anass.barrage.TempsOperations;
+import com.anass.csv.EnregistreurCSV;
 import com.anass.models.CoursModel;
 import com.anass.models.EtatSimulation;
 import com.anass.models.SimulationModel;
@@ -21,6 +22,7 @@ public class Simulation implements DashboardObserver, VolumeObserver{
     private List<CoursSimulation> coursSimulations;
     private TurbinSimulation turbinSimultaion;
     private TempsSimulation tempsSimulation;
+    private EnregistreurCSV printer;
 
     private List<SimulationUiObserver> simulationUiObservers = new ArrayList<>();
 
@@ -29,12 +31,19 @@ public class Simulation implements DashboardObserver, VolumeObserver{
     }
 
     public void startSimulation(){
-        initServices();
+        try {
+            initServices();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         startServices();
     }
 
     public void endSimulation(){
-        model.setEtatSimulation(new EtatSimulation(Etat.FIN));
+        for(SimulationUiObserver observer : this.simulationUiObservers){
+            observer.endSimulation();
+        }
+        printer.fermer();
     }
 
     @Override
@@ -66,7 +75,12 @@ public class Simulation implements DashboardObserver, VolumeObserver{
     public void updateEtatsimulation(EtatSimulation etat) {
         this.model.setEtatSimulation(etat);
         if (etat.getEtat() == Etat.ACTIVE){
-            startSimulation();
+            if(this.tempsSimulation == null) {
+                startSimulation();
+            }
+        }
+        if (etat.getEtat() == Etat.FIN){
+            endSimulation();
         }
     }
 
@@ -78,9 +92,19 @@ public class Simulation implements DashboardObserver, VolumeObserver{
     }
 
     // private methods :
-    private void initServices(){
+    private void initServices() throws IOException{
+        this.printer = new EnregistreurCSV();
+
         this.turbinSimultaion = new TurbinSimulation(model.getTurbinModel(), model.getEtatSimulation());
         this.turbinSimultaion.setVolumeObserver(this);
+        this.turbinSimultaion.setOnSucceeded(event -> {
+            try {
+                printer.ajouterRecord(tempsSimulation.getTemps(), model);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         this.coursSimulations = new ArrayList<>();
         for(int i=0; i<model.getEnsembleCoursModel().getNbCours(); i++){
             CoursModel cours = model.getEnsembleCoursModel().getCours(i);
@@ -100,15 +124,15 @@ public class Simulation implements DashboardObserver, VolumeObserver{
         }
         tempsSimulation.setPeriod(Duration.millis(250));
         tempsSimulation.setOnSucceeded((event->{
-            updateUI();
             turbinSimultaion.setHeure(tempsSimulation.getTemps()[0]);
             if (tempsSimulation.estTerminee()){
                 try {
-                    endSimulation();
+                    updateEtatsimulation(new EtatSimulation(Etat.FIN));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            updateUI();
         }));
         tempsSimulation.start();
     }

@@ -3,7 +3,7 @@ package com.anass.barrage;
 public class TempsOperations {
 
     public static String toString(Integer[] temps){
-        return String.format("%02d H : %02d m", temps[0], temps[1]);
+        return String.format("%02d:%02d", temps[0], temps[1]);
     }
 
     public static Integer[] add(Integer[] temps, int h, int m){

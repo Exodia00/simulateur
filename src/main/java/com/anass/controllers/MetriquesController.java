@@ -13,8 +13,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class MetriquesController implements Initializable, SimulationUiObserver{
     private final String FXML_PATH = "/com/anass/fxml/metriques.fxml";
@@ -25,6 +27,7 @@ public class MetriquesController implements Initializable, SimulationUiObserver{
     @FXML private Label etatGroupeFld;
     @FXML private Label heureFld;
     @FXML private Label niveauFld;
+    @FXML private VBox metriquesBox;
     
     private SimulationModel model;
 
@@ -47,6 +50,12 @@ public class MetriquesController implements Initializable, SimulationUiObserver{
         this.etatGroupeFld.setText(model.getEtatTurboStr(temps[0]));
         this.heureFld.setText(TempsOperations.toString(temps));
         this.niveauFld.setText(Integer.toString(model.getReservoirModel().getVolume()));
+    }
+
+    @Override
+    public void endSimulation(){
+        // Button btn = new Button("Sauvegarder");
+        // metriquesBox.getChildren().add(btn);
     }
   
     public Parent getView() throws IOException{

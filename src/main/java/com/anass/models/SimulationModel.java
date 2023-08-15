@@ -1,7 +1,5 @@
 package com.anass.models;
 
-import java.util.List;
-
 import com.anass.barrage.BarrageOperations;
 import com.anass.models.EtatSimulation.Etat;
 

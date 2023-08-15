@@ -10,6 +10,7 @@ import com.anass.models.EtatSimulation;
 import com.anass.models.SimulationModel;
 import com.anass.models.EtatSimulation.Etat;
 import com.anass.observers.DashboardObserver;
+import com.anass.observers.SimulationUiObserver;
 import com.anass.simulation.Dashboard;
 import com.anass.simulation.Simulation;
 
@@ -24,7 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class DashboardController implements Initializable{
+public class DashboardController implements Initializable, SimulationUiObserver{
     private final String FXML_PATH = "/com/anass/fxml/dashboard.fxml";
 
     @FXML   private Button btnDemarrer;
@@ -37,6 +38,7 @@ public class DashboardController implements Initializable{
 
     public DashboardController(Simulation simulation){
         this.dashboard = new Dashboard(simulation);
+        simulation.addSimulationUiObserver(this);
     }
 
     @Override
@@ -71,6 +73,19 @@ public class DashboardController implements Initializable{
     @FXML
     void handleReinit(ActionEvent event) {
         // this.etatSimulation = new EtatSimulation(EtatSimulation.ACTIVE);
+    }
+
+    // Simulation Ui Observer method
+    @Override
+    public void updateUi(Integer[] temps){}
+
+    @Override
+    public void endSimulation(){
+        // Disable all buttons
+        btnDemarrer.setDisable(true);
+        btnPause.setDisable(true);
+        btnStop.setDisable(true);
+        btnReinit.setDisable(false);
     }
 
     // Handle Properties change

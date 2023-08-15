@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox prefHeight="570.0" prefWidth="300.0" style="-fx-background-color: #e4e4ec;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="metriquesBox" prefHeight="570.0" prefWidth="300.0" style="-fx-background-color: #e4e4ec;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label text="Metriques">
          <font>
