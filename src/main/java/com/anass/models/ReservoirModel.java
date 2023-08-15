@@ -2,6 +2,8 @@ package com.anass.models;
 
 public class ReservoirModel {
     private int volume;
+    private int maxVolume = 5000000;
+    private int minVolume = 1000;
 
     public ReservoirModel(int volume) {
         this.volume = volume;
@@ -15,8 +17,14 @@ public class ReservoirModel {
         this.volume = volume;
     }
 
+    public int getMaxVolume(){
+        return this.maxVolume;
+    }
+
     public void addVolume(int volume){
-        this.volume += volume;
+        int vol = this.volume + volume;
+        if (vol<minVolume) return;
+        this.volume = vol < maxVolume ? vol : maxVolume;
     }
 
     @Override

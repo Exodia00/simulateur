@@ -36,6 +36,7 @@ public class SimulationController implements Initializable{
         try {
             initDashboard();
             initMetriques();
+            initAnimation();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +62,11 @@ public class SimulationController implements Initializable{
     private void initMetriques() throws IOException{
         MetriquesController metriquesController = new MetriquesController(simulation);
         borderPane.setLeft(metriquesController.getView());
+    }
+
+    private void initAnimation(){
+        AnimationController controller = new AnimationController(simulation.getModel());
+        borderPane.setCenter(controller.getView());
     }
 
 
