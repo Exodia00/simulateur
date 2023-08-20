@@ -1,70 +1,63 @@
 package com.anass.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import com.anass.models.SimulationModel;
+import com.anass.observers.SimulationUiObserver;
+import com.anass.simulation.Animation;
 
-import javafx.animation.AnimationTimer;
-import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
-public class AnimationController {
 
+/**
+ * Cette classe gère l'animation du barrage 
+ * 
+ * @author Anass MEHDAOUI 
+ */
+public class AnimationController implements SimulationUiObserver{
+
+    /**
+     * Représente l'animation
+     */
+    private Animation animation;
+    /**
+     * Le modèle de la simulation
+     */
     private SimulationModel model;
-    private Canvas canvas;
 
-    private double reservoirWidth = 300; // Width of the reservoir drawing
-    private double reservoirX = 50;      // X-coordinate of the reservoir drawing
-    private double reservoirMaxY = 400;   // Maximum Y-coordinate of the reservoir drawing
-
+    /**
+     * Constructeur à partir d'un modèle de la simulation
+     */
     public AnimationController(SimulationModel model) {
         this.model = model;
-        this.canvas = new Canvas(800, 500);
-        initAnimation();
+        this.animation = new Animation(new Canvas(800, 500), model);
+        // drawGrid(20);
     }
 
+    /**
+     * Renvoie un objet de type Canvas ou l'animation de déroule
+     * 
+     * @return canvas Canvas
+     */
     public Canvas getView() {
-        return canvas;
+        return animation.getCanvas();
     }
 
-    private void initAnimation() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                draw(gc);
-            }
-        }.start();
+    /**
+     * Notifie l'animation pour une mise à jour
+     * 
+     * @param temps Integer[]
+     */
+    @Override
+    public void updateUi(Integer[] temps) {
+        animation.updateUI(model, temps[0]);
     }
 
-    private void draw(GraphicsContext gc) {
-        // Clear canvas
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        // Draw the barrage
-        drawBarrage(gc);
-
-        // Draw the reservoir with dynamic water level
-        double reservoirHeight = calculateReservoirHeight();
-        drawReservoir(gc, reservoirHeight);
+    
+    @Override
+    public void endSimulation() {
     }
 
-    private double calculateReservoirHeight() {
-        double maxVolume = model.getReservoirModel().getMaxVolume();
-        double currentVolume = model.getReservoirModel().getVolume();
-        return (currentVolume / maxVolume) * reservoirMaxY;
-    }
 
-    private void drawBarrage(GraphicsContext gc) {
-        // Implement your barrage drawing logic here
-    }
 
-    private void drawReservoir(GraphicsContext gc, double waterHeight) {
-        gc.setFill(Color.BLUE);
-        gc.fillRect(reservoirX, reservoirMaxY - waterHeight, reservoirWidth, waterHeight);
-    }
+   
 }
