@@ -55,6 +55,10 @@ public class EnregistreurCSV {
             model.getEtatTurbo(temps[0]));
     }
 
+    /**
+     * Cette méthode permet de fermer le printer.
+     * 
+     */
     public void fermer(){
         try {
             printer.close();

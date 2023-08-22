@@ -47,7 +47,7 @@
                      <children>
                         <VBox prefHeight="67.0" prefWidth="164.0">
                            <children>
-                              <Label text="Niveau du reservoir (m2)" />
+                              <Label text="Volume initiale du reservoir (m3)" />
                               <TextField fx:id="niveauReservoirFld" />
                            </children>
                         </VBox>

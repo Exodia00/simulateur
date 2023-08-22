@@ -10,6 +10,8 @@ import com.anass.simulation.Simulation;
 
 /**
  * Contient des opérations logiques de barrage 
+ * <p>
+ * Cette class permet le calcule des volumes en convertissant du débit vers la quantité corespendante dans un interval de temps précisé
  * 
  * @author: Anass MEHDAOUI
  */
@@ -21,7 +23,7 @@ public class BarrageOperations {
      * Prend en compte le volume d'eau dans le réservoir du barrage, le débit total des 
      * cours d'eau et le débit minimum requis par le turbo-alternateur.
      * <p>
-     * Le debit et converti en volume total pendant une heure
+     * Le debit (m3/h) et converti en volume total pendant une heure
      * 
      * 
      * @param reservoir Objet du type ReservoirModel representant le reservoir du barrage hydro-electrique.
@@ -31,9 +33,9 @@ public class BarrageOperations {
      * 
      */
     public static Etat calcEtatTurbo(ReservoirModel reservoir, EnsembleCoursModel cours, int debitMin){
-        int niveau = reservoir.getVolume();
-        int volumeEntree = cours.getDebitTotal() * 60*60;
-        int volumeSortie = debitMin*60*60;
+        int niveau = reservoir.getVolume(); // en m3
+        int volumeEntree = cours.getDebitTotal();   // en considérant que le debit est en m3/h
+        int volumeSortie = debitMin;
         return (niveau + volumeEntree > volumeSortie ? Etat.ACTIVE : Etat.PAUSE); 
     }
 
@@ -44,7 +46,7 @@ public class BarrageOperations {
      * @return volume Integer : Le volume d'eau pendant un quart d'heure
      */
     public static int calculerVolume(CoursModel cours){
-        return cours.getDebit() * 60 * 15 ;
+        return cours.getDebit()/4 ;     // Le debit est mesuré dans ce cas en m3/h
     }
 
     /**
@@ -56,7 +58,7 @@ public class BarrageOperations {
      * @return volume Integer : Le volume d'eau requis 
      */
     public static int calculerVolume(TurbinModel turbin, int h){
-        return turbin.getDebit(h) * 60 * 60 ;
+        return turbin.getDebit(h);
     }
 
     /**

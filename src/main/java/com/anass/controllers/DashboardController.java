@@ -109,7 +109,7 @@ public class DashboardController implements Initializable, SimulationUiObserver{
      */
     @FXML
     void handleReinit(ActionEvent event) {
-
+        dashboard.reinitialiserSimulation();
     }
 
     @Override

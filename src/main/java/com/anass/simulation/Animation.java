@@ -12,37 +12,72 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 
+/**
+ * Cette classe gère l'animation graphique de la simulation.
+ * 
+ * Elle dessine les éléments du barrage, les générateurs, la conduite, le réservoir, et la turbine.
+ * Elle utilise JavaFX pour effectuer le rendu graphique.
+ * 
+ * Les animations des générateurs et de la turbine sont gérées par des objets AnimationTimer.
+ * 
+ * @author Anass MEHDAOUI
+ */
 public class Animation {
     
+    /** Le canvas où l'animation se déroule */
     private Canvas canvas;
 
+    /** Proprieté de l'état du turbo */
     private ObjectProperty<Boolean> etatTurbo = new SimpleObjectProperty<Boolean>(false);
+    /** Image du turbo-altérnateur */
     private Image turbo = new Image(getClass().getResourceAsStream("/com/anass/images/turboalternateur.png"));
+    /** Angle de l'image du turbo-altérnateur */
     private int angle = 0;
 
+    /** Longueur de la base du réservoir */
     private final int LONGUEUR_RESERVOIR = 13*20; 
+    /** Coordonées du réservoir */
     private final int X_RESERVOIR = 4*20;
     private final int Y_RESERVOIR_MAX = 14*20;
     private final int Y_CONDUITE_MIN = 11*20;
 
+    /**
+     * Crée une nouvelle instance de l'animation graphique.
+     * 
+     * @param canvas Le canvas JavaFX sur lequel l'animation sera affichée.
+     * @param model Le modèle de simulation à utiliser pour l'animation.
+     */
     public Animation(Canvas canvas, SimulationModel model){
         this.canvas = canvas;
         initialiser(canvas.getGraphicsContext2D(), model);
     }
 
+    /**
+     * Récupère le canvas associé à cette animation.
+     * 
+     * @return Le canvas JavaFX utilisé pour l'animation.
+     */
     public Canvas getCanvas(){{
         return this.canvas;
     }}
 
+    /**
+     * Met à jour l'interface utilisateur de l'animation avec les données du modèle.
+     * 
+     * @param model Le modèle de simulation à utiliser pour la mise à jour de l'interface.
+     * @param h L'heure de la simulation.
+     */
     public void updateUI(SimulationModel model, int h){
         dessinerReservoir(canvas.getGraphicsContext2D(), model);
         this.etatTurbo.set(model.getEtatTurbo(h) == Etat.ACTIVE); ;
     }
 
+    /**
+     * Dessine la grille sur le canvas avec la taille de grille spécifiée.
+     * 
+     * @param gridSize La taille de la grille en pixels.
+     */
     public void drawGrid(int gridSize) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double width = canvas.getWidth();
@@ -60,6 +95,12 @@ public class Animation {
         }
     }
     
+    /**
+     * Initialise l'animation en dessinant les composants statiques, et l'état initiale des composants dynamiques
+     * 
+     * @param gc le contexte graphic du canvas
+     * @param model le modèle associé à la simulation
+     */
     private void initialiser(GraphicsContext gc, SimulationModel model){
 
         dessinerApBarrage(gc);
@@ -72,6 +113,11 @@ public class Animation {
                 
     }
 
+    /**
+     * Initialise un AnimationTimer pour dessiner le génerateur du barrage
+     * 
+     * @param gc le contexte graphic du canvas
+     */
     private void initAnimationGenerateur(GraphicsContext gc){
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -86,6 +132,11 @@ public class Animation {
         timer.start();
     }
 
+    /**
+     * Initialisation d'un AnimationTimer pour dessiner la conduite du turbo-altérnateur, et le turbo altérnateur
+     * 
+     * @param gc le contexte graphic du canvas
+     */
     private void initAnimationConduite(GraphicsContext gc){
         AnimationTimer timer = new AnimationTimer() {
 
@@ -100,6 +151,11 @@ public class Animation {
         timer.start();
     }
 
+    /**
+     * Dessine l'état actuel du générateur sur le canvas.
+     * 
+     * @param gc Le contexte graphique JavaFX.
+     */
     private void dessinerEtatGenerateur(GraphicsContext gc){
         Color clr = (this.etatTurbo.get() ? Color.GREEN : Color.RED);
         gc.setFill(clr);
@@ -113,6 +169,11 @@ public class Animation {
         gc.strokeOval(cercleX, cercleY, d, d);
     }
 
+    /**
+     * dessiner les cables de transmissions depuis le génerateur
+     * 
+     * @param gc
+     */
     private void dessinerCables(GraphicsContext gc){
         int x1 = 20*20, y1 = 10*20;
         int x2 = 35*20, y2 = 5*20;
@@ -120,6 +181,7 @@ public class Animation {
         int xc2 = x2-10, yc2 = y2+20;
 
         gc.setStroke(this.etatTurbo.get() ? Color.YELLOW : Color.BLACK);
+        gc.setLineWidth(4);
 
         gc.beginPath();
         gc.moveTo(x1, y1);
@@ -127,6 +189,12 @@ public class Animation {
         gc.stroke();
     }
 
+    /**
+     * Dessiner l'image du turbo-altérnateur à un angle spécifique.
+     * 
+     * @param gc : Contexte graphique du canvas
+     * @param angle : Angle de l'image
+     */
     private void dessinerTurbo(GraphicsContext gc, int angle){
         gc.save();
         gc.translate(canvas.getWidth()/2, canvas.getHeight()/2);
@@ -139,6 +207,12 @@ public class Animation {
         gc.restore();
     }
 
+    /**
+     * Dessiner le réservoir, selon son volume, son volume maximale, et l'hauteur maximale du réservoir.
+     * 
+     * @param gc
+     * @param model : Modèle de la simulation
+     */
     private void dessinerReservoir(GraphicsContext gc, SimulationModel model){
         gc.clearRect(X_RESERVOIR, Y_RESERVOIR_MAX-LONGUEUR_RESERVOIR, LONGUEUR_RESERVOIR, LONGUEUR_RESERVOIR);
 
@@ -186,6 +260,11 @@ public class Animation {
 
     }
     
+    /**
+     * Dessiner l'arrière plan du barrage
+     * 
+     * @param gc
+     */
     private void dessinerApBarrage(GraphicsContext gc){
         gc.setFill(Color.GRAY);
 
@@ -196,6 +275,11 @@ public class Animation {
 
     }
 
+    /**
+     * Dessiner le plan d'eau
+     * 
+     * @param gc
+     */
     private void dessinerPlanEau(GraphicsContext gc){
 
         gc.setFill(Color.BLUE);
@@ -208,6 +292,11 @@ public class Animation {
 
     }
 
+    /**
+     * dessiner le génerateur
+     * 
+     * @param gc
+     */
     private void dessinerGenerateur(GraphicsContext gc){
         gc.setFill(Color.LIGHTGRAY);
         gc.setStroke(Color.BLACK);
@@ -227,6 +316,7 @@ public class Animation {
 
 
     }
+    
     
     private void dessinerConduite(GraphicsContext gc){
 
